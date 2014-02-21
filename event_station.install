@@ -99,13 +99,14 @@ function event_station_schema() {
         'default' => 0, //make default dynamic?  Like auto-indexing?  Perhaps set new value by variable_set.
         'description' => 'The weight of the station.  The lower the integer the lighter the item.', //The create new value by variable_get() + 1 2011Jan29
       ),
-      /*
+      //uid
       'owner' => array(
         'description' => 'The user responsible for managing the station.  Initially, this is the station creator',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
       ),
+      /*
       'status' => array(
         'description' => 'Boolean indicating whether the station is open or closed (visible to non-administrators).',
         'type' => 'int',
