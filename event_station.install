@@ -120,19 +120,20 @@ function event_station_schema() {
         'not null' => TRUE,
         'default' => 1,
       ),
-      /*
+      
       'created' => array(
         'description' => 'The Unix timestamp when the node was created.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
       ),
+      
       'changed' => array(
         'description' => 'The Unix timestamp when the node was most recently saved.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
-      ),*/
+      ),
     ), //fields
     'primary key' => array('esid'),
   ); 
