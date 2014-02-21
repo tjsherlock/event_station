@@ -113,13 +113,14 @@ function event_station_schema() {
         'not null' => TRUE,
         'default' => 1,
       ),
-      /*
+      
       'visibility' => array(
         'description' => 'Boolean indicating whether the station is visible to non-administrators.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 1,
-      ),      
+      ),
+      /*
       'created' => array(
         'description' => 'The Unix timestamp when the node was created.',
         'type' => 'int',
