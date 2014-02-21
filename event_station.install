@@ -55,13 +55,12 @@ function event_station_schema() {
         'length' => '255',
         'not null' => TRUE,
       ),
-      /*
       'description' => array(
         'type' => 'varchar',//varchar instead?  2013Nov21 tjs
         'not null' => TRUE,
         'description' => 'A description of the event station.',
-        //'default' => '',
       ),
+       /*
       //The number of slots available for volunteers
       // Since this is an array should the field be a foreign key to another table acting as the array.
       'spots' => array(
@@ -141,7 +140,7 @@ function event_station_schema() {
  * 
  *  Use this to add indices, maybe 2014Feb20 tjs
  */
-
+/*
 function event_station_update_7000(&$sandbox) {
   $new_field = array(
     'description' => 'A description of the event station',
@@ -152,3 +151,5 @@ function event_station_update_7000(&$sandbox) {
 
   db_add_field('evreg_eventstation', 'description', $new_field);
 }
+ * *
+ */
