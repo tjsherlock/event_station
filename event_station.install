@@ -71,7 +71,7 @@ function event_station_schema() {
         'default' => 1,//0,
         'description' => 'Spots for the guiding event participant',
       ),
-      /*
+      
       // Since this is an array should the field be a foreign key to another table acting as the array.        		
       'guides' => array(
         'description' => 'Name of the guiding event participants',
@@ -80,6 +80,7 @@ function event_station_schema() {
         'serialize' => TRUE,
         'serialized default' => 'a:0:{}',
       ),
+      
       // this is the registration event
       // May be a 'foreign key' on the table.
       'event' => array(
@@ -90,6 +91,7 @@ function event_station_schema() {
         //'default' => variable_get('registration_event', 'PTA Event'),
         'default' => DEFAULT_EVENT,
       ),
+      /*
       'weight' => array(
         'type' => 'int',
         'unsigned' => TRUE,
