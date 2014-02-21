@@ -137,19 +137,18 @@ function event_station_schema() {
 
 
 /**
- *  Adding the new field to the evreg_event_station table
+ *  Adding the description field to the evreg_event_station table
  * 
  *  Use this to add indices, maybe 2014Feb20 tjs
  */
-/*
+
 function event_station_update_7000(&$sandbox) {
   $new_field = array(
-    'description' => 'some description here',
+    'description' => 'A description of the event station',
     'type' => 'varchar',
     'length' => '255',
     'not null' => TRUE,
   );
 
-  db_add_field('evreg_eventstation', 'fieldname', $new_field);
+  db_add_field('evreg_eventstation', 'description', $new_field);
 }
-*/
