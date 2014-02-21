@@ -106,13 +106,14 @@ function event_station_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
-      /*
+      
       'status' => array(
         'description' => 'Boolean indicating whether the station is open or closed (visible to non-administrators).',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 1,
       ),
+      /*
       'visibility' => array(
         'description' => 'Boolean indicating whether the station is visible to non-administrators.',
         'type' => 'int',

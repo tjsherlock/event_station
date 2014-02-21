@@ -1,5 +1,5 @@
 name = Event Station
 description = An activity within an event that requires an instructor or instructors of other participants.
-version = "7.x-1.7-dev"
+version = "7.x-1.8-dev"
 core = 7.x
 dependencies[] = entity
