@@ -91,7 +91,7 @@ function event_station_schema() {
         //'default' => variable_get('registration_event', 'PTA Event'),
         'default' => DEFAULT_EVENT,
       ),
-      /*
+      
       'weight' => array(
         'type' => 'int',
         'unsigned' => TRUE,
@@ -99,6 +99,7 @@ function event_station_schema() {
         'default' => 0, //make default dynamic?  Like auto-indexing?  Perhaps set new value by variable_set.
         'description' => 'The weight of the station.  The lower the integer the lighter the item.', //The create new value by variable_get() + 1 2011Jan29
       ),
+      /*
       'owner' => array(
         'description' => 'The user responsible for managing the station.  Initially, this is the station creator',
         'type' => 'int',
