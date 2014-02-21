@@ -1,0 +1,58 @@
+<?php
+/**
+ * @file
+ * Provides a simple custom entity type named 'video' for tracking embed codes.
+ */
+
+/**
+ * Implements hook_entity_info().
+ */
+function event_station_entity_info() {
+  $info = array();
+  // Our custom video entity needs to be defined here.
+  // See http://drupal.org/node/1026420 and http://drupal.org/node/878804
+  // for more documentation.
+  $info['event_station'] = array(
+    // Human readable label.
+    'label' => t('Event Station'),
+    // Table for storing entity data, defined in hook_schema().
+    'base table' => 'evreg_eventstation',//evreg = event registration
+    // This helps Entity API know how to query your custom table.
+    'entity keys' => array(
+      'id' => 'esid',
+    ),
+  );
+
+  return $info;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function event_station_menu() {
+  $items = array();
+  $items['event_station'] = array(
+    'title' => 'Event Station Page',
+    'page callback' => 'event_station_page',
+    'access callback' => TRUE,
+    'menu' => 'navigation',
+  );
+  return $items;
+}
+
+/**
+ * Callback for /videoentity page.
+ *
+ * Just a place to test things out and be able to see the results on a page.
+ */
+function event_station_page() {
+  $event_station = entity_load('event_station', array(1));
+  kpr($event_station);
+
+  // Or load it with EFQ.
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'event_station');
+  $results = $query->execute();
+  kpr($results);
+  return 'hello there!';
+}
