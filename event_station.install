@@ -56,11 +56,12 @@ function event_station_schema() {
         'not null' => TRUE,
       ),
       'description' => array(
-        'type' => 'varchar',//varchar instead?  2013Nov21 tjs
+        'type' => 'varchar',
+        'length' => '255',
         'not null' => TRUE,
         'description' => 'A description of the event station.',
       ),
-       /*
+
       //The number of slots available for volunteers
       // Since this is an array should the field be a foreign key to another table acting as the array.
       'spots' => array(
@@ -70,6 +71,7 @@ function event_station_schema() {
         'default' => 1,//0,
         'description' => 'Spots for the guiding event participant',
       ),
+      /*
       // Since this is an array should the field be a foreign key to another table acting as the array.        		
       'guides' => array(
         'description' => 'Name of the guiding event participants',
