@@ -16,11 +16,33 @@ function event_station_entity_info() {
     // Human readable label.
     'label' => t('Event Station'),
     // Table for storing entity data, defined in hook_schema().
-    'base table' => 'evreg_eventstation',//evreg = event registration
+    'base table' => 'evreg_eventstation',//evreg = event registration, should same as name key in schema
     // This helps Entity API know how to query your custom table.
     'entity keys' => array(
       'id' => 'esid',
+      'label' => 'name', //7.x-2.1-dev tjs
     ),
+    'uri callback' => 'entity_class_uri', //7.x-2.1-dev tjs
+    //These are the default controllers.
+    // 'entity class' => 'Entity',
+    'entity class' => 'EventStation', //7.x-2.1-dev tjs
+    // 'controller class' => 'DrupalDefaultEntityController',
+    // Other options provided by the EntityAPI contrib module
+    // 'controller class' => 'EntityAPIController ',
+    // 'controller class' => 'EntityAPIControllerExportable',
+    'controller class' => 'EventStationController',  //7.x-2.1-dev tjs
+    // This is a uri function provided by the Entity contrib module.
+    // It's a simple wrapper around the uri method in the controller class.
+     // The information below is used to extend the EntityDefaultUIController
+     'admin ui' => array(
+       'path' => 'admin/eventstation',
+       'controller class' => 'EventStationUIController',
+       'menu wildcard' => '%eventstation',
+       'file' => 'event_station.admin.inc'
+     ),
+         'module' => 'event_station',
+     // Controls who can access entity CRUD.
+     'access callback' => 'event_station_access',
   );
 
   return $info;
@@ -37,8 +59,55 @@ function event_station_menu() {
     'access callback' => TRUE,
     'menu' => 'navigation',
   );
+  ////7.x-2.1-dev tjs
+  $items['event_station/%eventstation'] = array(
+    'title' => 'event station',
+    'page callback' => 'event_station_view_entity',
+    'page arguments' => array(1),
+    'access callback' => TRUE,
+  );
   return $items;
 }
+
+
+
+/**
+ * Access callback for VideoEntity CRUD operations.
+ */
+function event_station_access($op, $event_station = NULL, $account = NULL) {
+  //if ((($op == 'view' && user_access('view event stations', $account))) || user_access('administer event stations', $account)) {
+  if ($op == 'view' && user_access('view event stations', $account)) {
+    return TRUE;
+  }
+  else if (user_access('administer event stations', $account)) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function event_station_permission() {
+  return array(
+    'administer event stations' => array(
+      'title' => t('Administer Event Stations'),
+    ),
+    'view event stations' => array(
+      'title' => t('View Event Stations'),
+    ),
+  );
+}
+
+/**
+ *  Menu autoloader for /event_station
+ *  7.x-2.1-dev tjs
+ */
+function event_station_load($id) {
+    $es = entity_load("event_station", array($id));
+    return array_pop($es);
+}
+
 
 /**
  * Callback for /videoentity page.
@@ -56,3 +125,118 @@ function event_station_page() {
   kpr($results);
   return 'hello there!';
 }
+
+
+/**
+ *  Callback for /event-station/ID page.
+ * 
+ *  Just a place to render a complete video entity.
+ */
+function event_station_view_entity($event_station){
+    drupal_set_title($event_station->name);
+    $es = entity_view('event_station', array($event_station->esid => $event_station));
+    kpr($es);
+    return 'Hello Spaceman';
+    
+}
+
+
+/**
+ *  Our custom entity class
+ * 
+ * The Entity class w'eer overriding is in 
+ * sites/all/modules/entity/includes/entity.inc
+ * 
+ * 7.x-2.1-dev tjs 
+ */
+
+class EventStation extends Entity{
+    
+     /**
+   * Override this in order to implement a custom default URI and specify
+   * 'entity_class_uri' as 'uri callback' hook_entity_info().
+   */
+  protected function defaultUri() {
+    return array('path' => 'event-station/' . $this->identifier());
+  }
+    
+}
+
+/**
+ * Our custom controller for the event_station type.
+ *
+ * We're choosing to extend the controller provided by the entity module for
+ * full CRUD support for event_station.
+ *
+ * The EntityAPIController is found in
+ * sites/all/modules/contrib/entity/includes/entity.controller.inc
+ */
+class EventStationController extends EntityAPIController {
+    
+  public function buildContent($entity, $view_mode = 'full', $langcode = NULL, $content = array()) {
+    
+    //introduce event station properties here.
+    
+    $build = parent::buildContent($entity, $view_mode, $langcode, $content);
+    
+    $build['name'] = array(
+      '#type' => 'markup',
+      '#markup' => $entity->name,
+    );
+    
+    $build['esid'] = array(
+      '#type' => 'markup',
+      '#markup' => $entity->esid,
+    );
+    
+    $build['description'] = array(
+      '#type' => 'markup',
+      '#markup' => $entity->description,
+    );
+    
+    $build['spots'] = array(
+      '#type' => 'markup',
+      '#markup' => $entity->spots,
+    );
+    
+    $build['guides'] = array(
+      '#type' => 'markup',
+      '#markup' => $entity->guides,
+    );
+    
+    $build['event'] = array(
+      '#type' => 'markup',
+      '#markup' => $entity->event,
+    );    
+
+    return $build;
+  }
+  
+    /**
+   * Override save method.
+   *
+   * Populate created and updated dates automatically.
+   */
+  public function save($entity, DatabaseTransaction $transaction = NULL) {
+
+    if (isset($entity->is_new)) {
+      $entity->created_at = REQUEST_TIME;
+    }
+
+    $entity->updated_at = REQUEST_TIME;
+
+    return parent::save($entity, $transaction);
+  }
+
+}
+
+/**
+ * Our custom controller for the admin ui.
+ *
+ * The EntityDefaultUIController can be found in
+ * sites/all/modules/contrib/entity/includes/entity.ui.inc
+ */
+class EventStationUIController extends EntityDefaultUIController {
+
+}
+
