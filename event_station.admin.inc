@@ -30,34 +30,60 @@ function event_station_form($form, &$form_state, $EventStation, $op = 'edit') {
   );
   
     $form['spots'] = array(
-    '#title' => t('Spots'),
-    '#type' => 'textfield',
-    '#description' => t('Spots available in the event station.'),
-    '#default_value' => isset($EventStation->spots) ? $EventStation->spots : 1,
-    '#weight' => -30,
+      '#title' => t('Spots'),
+      '#type' => 'textfield',
+      '#description' => t('Spots available in the event station.'),
+      '#default_value' => isset($EventStation->spots) ? $EventStation->spots : 1,
+      '#weight' => -30,
   );
+
+/*
+    $form['guides'] = array(
+      '#title' => t('Guides'),
+      '#type' => 'textfield',
+      'description' => 'Name of the guiding event participants',
+      //'#default_value' => isset($EventStation->guides) ? $EventStation->guides : '',  
+      '#default_value' => '', 
+      '#weight' => -20,
+  );
+ * *
+ * 
+ * 
+ */
+    
+    $form['guides'] = array(
+    '#title' => t('Guides'),
+    '#type' => 'textfield',
+    '#description' => t('Name of the guiding event participants.'),
+    //'#default_value' => isset($EventStation->owner) ? $EventStation->owner : array('%name' => $account->name),
+    '#default_value' => isset($EventStation->guides) ? $EventStation->guides : array(''),
+    //'#autocomplete_path' => 'owner/autocomplete',
+    '#weight' => -10,
+  );
+
     //@todo: this should be a $user->name or $account->name.  Perhaps use autocomplete
      $form['owner'] = array(
     '#title' => t('Owner'),
     '#type' => 'textfield',
     '#description' => t('The user responsible for managing the station.  Initially, this is the station creator.'),
-    '#default_value' => isset($EventStation->owner) ? $EventStation->owner : array('%name' => $account->name),
+    //'#default_value' => isset($EventStation->owner) ? $EventStation->owner : array('%name' => $account->name),
+    '#default_value' => isset($EventStation->owner) ? $EventStation->owner : 'Username',
     //'#autocomplete_path' => 'owner/autocomplete',
-    '#weight' => -30,
+    '#weight' => -10,
   );
   $form['status'] = array(
     '#title' => t('This station is open.'),
     '#type' => 'checkbox',
     '#description' => t('Determines whether station is open or closed for registration.'),
     '#default_value' => isset($EventStation->status) ? $EventStation->status : '',    
-    '#weight' => -20,
+    '#weight' => -8,
   );
   $form['visibility'] = array(
     '#title' => t('This station is visible.'),
     '#type' => 'checkbox',
     '#description' => t('Determines whether station is visible to registration users.'),
     '#default_value' => isset($EventStation->visibility) ? $EventStation->visibility : '',     
-    '#weight' => -10,
+    '#weight' => -6,
   );
   $form['weight'] = array(
   '#type' => 'weight', 
@@ -65,8 +91,11 @@ function event_station_form($form, &$form_state, $EventStation, $op = 'edit') {
   '#default_value' => isset($EventStation->weight) ? $EventStation->weight : 0, 
   '#delta' => 10, 
   '#description' => t('Optional.  the heavier stations (e.g. 10) will sink to the bottom and the lighter stations (e.g. -10) will float to the top.'),
-  '#weight' => -8,
+  '#weight' => -4,
     );
+  
+  field_attach_form('event_station', $EventStation, $form, $form_state);// inform entity controller of fields
+    
   //not sure why 'EventStationAsset'
   $form['actions'] = array(
     '#type' => 'actions',

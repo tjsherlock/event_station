@@ -81,6 +81,16 @@ function event_station_schema() {
         'serialized default' => 'a:0:{}',
       ),
       
+      /*
+       *'data' => array(
+        'type' => 'blob',
+        'not null' => FALSE,
+        'size' => 'big',
+        'serialize' => TRUE,
+        'description' => 'The arbitrary data for the item.',
+      ),
+       * 
+       */
       // this is the registration event
       // May be a 'foreign key' on the table.
       'event' => array(

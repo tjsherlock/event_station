@@ -37,12 +37,23 @@ function event_station_entity_info() {
      'admin ui' => array(
        'path' => 'admin/eventstation',
        'controller class' => 'EventStationUIController',
-       'menu wildcard' => '%eventstation',
+       'menu wildcard' => '%event_station',
        'file' => 'event_station.admin.inc'
      ),
          'module' => 'event_station',
      // Controls who can access entity CRUD.
      'access callback' => 'event_station_access',
+     // Tell FieldAPI that fields can be attached to our video entity
+     'fieldable' => TRUE,
+     'bundles' => array(
+        'event_station' => array(
+          'label' => t('Event Station'),
+          'admin' => array(
+            'path' => 'admin/eventstation',//same as admin ui path
+            'access arguments' => array('administer event stations'),
+          ),
+        ),
+      ),   
   );
 
   return $info;
@@ -60,12 +71,13 @@ function event_station_menu() {
     'menu' => 'navigation',
   );
   ////7.x-2.1-dev tjs
-  $items['event_station/%eventstation'] = array(
+  $items['eventstation/%event_station'] = array(
     'title' => 'event station',
     'page callback' => 'event_station_view_entity',
     'page arguments' => array(1),
     'access callback' => TRUE,
   );
+  kpr($items);
   return $items;
 }
 
@@ -104,7 +116,7 @@ function event_station_permission() {
  *  7.x-2.1-dev tjs
  */
 function event_station_load($id) {
-    $es = entity_load("event_station", array($id));
+    $es = entity_load('event_station', array($id));
     return array_pop($es);
 }
 
@@ -136,7 +148,9 @@ function event_station_view_entity($event_station){
     drupal_set_title($event_station->name);
     $es = entity_view('event_station', array($event_station->esid => $event_station));
     kpr($es);
-    return 'Hello Spaceman';
+    //return drupal_render($es);
+    return $es;
+    //return 'Hello Spaceman';
     
 }
 
@@ -157,7 +171,7 @@ class EventStation extends Entity{
    * 'entity_class_uri' as 'uri callback' hook_entity_info().
    */
   protected function defaultUri() {
-    return array('path' => 'event-station/' . $this->identifier());
+    return array('path' => 'eventstation/' . $this->identifier());
   }
     
 }
@@ -189,7 +203,7 @@ class EventStationController extends EntityAPIController {
       '#markup' => $entity->esid,
     );
     
-    $build['description'] = array(
+    $build['description'] = array( 
       '#type' => 'markup',
       '#markup' => $entity->description,
     );
