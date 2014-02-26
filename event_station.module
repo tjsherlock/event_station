@@ -37,7 +37,7 @@ function event_station_entity_info() {
      'admin ui' => array(
        'path' => 'admin/eventstation',
        'controller class' => 'EventStationUIController',
-       'menu wildcard' => '%event_station',
+       'menu wildcard' => '%event_station',//must be same as entity name or maybe module name
        'file' => 'event_station.admin.inc'
      ),
          'module' => 'event_station',
@@ -53,12 +53,124 @@ function event_station_entity_info() {
             'access arguments' => array('administer event stations'),
           ),
         ),
-      ),   
-  );
+      ),//'bundles'
+    //Views exposure
+    'views controller class' => 'EntityDefaultViewsController',
+    //Custom view modes.
+    'view modes' => array(
+      'event participant' => array(
+        'label' => t('Event Participant'),
+        'custom settings' => FALSE,
+        ),
+      'event manager' => array(
+        'label' => t('Event Manager'),
+        'custom settings' => FALSE,        
+        ),
+      'station captain' => array(
+        'label' => t('Station Captain'),
+        'custom settings' => FALSE,        
+        ),
+      'guide' => array(
+        'label' => t('Guide'),
+        'custom settings' => FALSE,        
+        ),
+      'registration item' => array(
+        'label' => t('Registration Item'),
+        'custom settings' => FALSE,
+        ),
+      'full' => array(
+        'label' => t('Full'),
+        'custom settings' => FALSE,
+        ),      
+      ),//view modes
+      
+  );//$info['event_station']
 
   return $info;
 }
 
+
+/**
+ * Implements hook_entity_property_info().
+ */
+function event_station_entity_property_info() {
+  $info = array();
+  $properties = &$info['event_station']['properties'];
+  $properties['id'] = array(
+    'label' => t('Event Station ID'),
+    'description' => t('The uniquie ID of the event station.'),
+    'type' => 'integer',
+    'schema field' => 'esid',
+  );
+  $properties['name'] = array(
+    'label' => t('Name'),
+    'description' => t('Name of the event station'),
+    'type' => 'text',
+    'schema field' => 'name',
+  );
+  $properties['description'] = array(
+    'label' => t('Description'),
+    'description' => t('A description of the event station.'),
+    'type' => 'text',
+    'schema field' => 'description',
+  );
+  $properties['spots'] = array(
+    'label' => t('Spots'),
+    'description' => t('Spots for the guiding event participant'),
+    'type' => 'integer',
+    'schema field' => 'spots',
+  );
+  $properties['guides'] = array(
+    'label' => t('Guides'),
+    'description' => t('Name of the guiding event participants'),
+    'type' => 'list<text>',//textfield?  delta?
+    'schema field' => 'guides',
+  );
+  $properties['event'] = array(
+    'label' => t('Event'),
+    'description' => t('Event associated with the station.'),
+    'type' => 'text',
+    'schema field' => 'event',
+  );  
+  $properties['weight'] = array(
+    'label' => t('Weight'),
+    'description' => t('The weight of the station.  The lower the integer the lighter the item.'),
+    'type' => 'integer',
+    'schema field' => 'weight',
+  );
+  $properties['owner'] = array(
+    'label' => t('Owner'),
+    'description' => t('The weight of the station.  The lower the integer the lighter the item.'),
+    'type' => 'text',
+    'schema field' => 'owner',
+  );
+  $properties['status'] = array(
+    'label' => t('Status'),
+    'description' => t('Boolean indicating whether the station is open or closed (visible to non-administrators).'),
+    'type' => 'boolean',
+    'schema field' => 'status',
+  );
+   $properties['visibility'] = array(
+    'label' => t('Weight'),
+    'description' => t('Boolean indicating whether the station is visible to non-administrators.'),
+    'type' => 'boolean',
+    'schema field' => 'weight',
+  ); 
+  $properties['created'] = array(
+    'label' => t('Created'),
+    'description' => t('Date the Event Station was created'),
+    'type' => 'date',
+    'schema field' => 'created',
+  );
+  $properties['changed'] = array(
+    'label' => t('change date'),
+    'description' => t('Date the Event Station was last changed'),
+    'type' => 'date',
+    'schema field' => 'changed',
+  );
+
+  return $info;
+}
 /**
  * Implements hook_menu().
  */
@@ -114,6 +226,9 @@ function event_station_permission() {
 /**
  *  Menu autoloader for /event_station
  *  7.x-2.1-dev tjs
+ * 
+ *  @see  $items['eventstation/%event_station']
+ *  @see event_station_view_entity
  */
 function event_station_load($id) {
     $es = entity_load('event_station', array($id));
@@ -125,6 +240,8 @@ function event_station_load($id) {
  * Callback for /videoentity page.
  *
  * Just a place to test things out and be able to see the results on a page.
+ * 
+
  */
 function event_station_page() {
   $event_station = entity_load('event_station', array(1));
@@ -193,35 +310,60 @@ class EventStationController extends EntityAPIController {
     
     $build = parent::buildContent($entity, $view_mode, $langcode, $content);
     
-    $build['name'] = array(
+    if($view_mode == 'event participant'){
+      
+    }elseif ($view_mode == 'event manager'){
+      
+    }elseif ($view_mode == 'station captain'){
+      
+    }elseif ($view_mode == 'guide'){
+      
+    }elseif ($view_mode == 'registration item'){//used when event station appears on an event registration form, similar to a teaser tjs 2014Feb25
+      
+      $build['name'] = array(
       '#type' => 'markup',
       '#markup' => $entity->name,
-    );
-    
-    $build['esid'] = array(
-      '#type' => 'markup',
-      '#markup' => $entity->esid,
-    );
-    
-    $build['description'] = array( 
+      );
+      
+      $build['description'] = array( 
       '#type' => 'markup',
       '#markup' => $entity->description,
-    );
+      );
+      
+    }elseif ($view_mode == 'full'){
+      
+      $build['name'] = array(
+      '#type' => 'markup',
+      '#markup' => $entity->name,
+      );
     
-    $build['spots'] = array(
+      $build['esid'] = array(
+      '#type' => 'markup',
+      '#markup' => $entity->esid,
+      );
+    
+      $build['description'] = array( 
+      '#type' => 'markup',
+      '#markup' => $entity->description,
+      );
+    
+      $build['spots'] = array(
       '#type' => 'markup',
       '#markup' => $entity->spots,
-    );
+      );
     
-    $build['guides'] = array(
+      $build['guides'] = array(
       '#type' => 'markup',
       '#markup' => $entity->guides,
-    );
+      );
     
-    $build['event'] = array(
+      $build['event'] = array(
       '#type' => 'markup',
       '#markup' => $entity->event,
-    );    
+      );
+    }
+    
+    
 
     return $build;
   }
@@ -251,6 +393,20 @@ class EventStationController extends EntityAPIController {
  * sites/all/modules/contrib/entity/includes/entity.ui.inc
  */
 class EventStationUIController extends EntityDefaultUIController {
+  
+    /**
+   * Generates the table headers for the overview table.
+   */
+  protected function overviewTableHeaders($conditions, $rows, $additional_header = array()) {
+    $header = $additional_header;
+    array_unshift($header, t('Event Stations'));
+    if (!empty($this->entityInfo['exportable'])) {
+      $header[] = t('Status');
+    }
+    // Add operations with the right colspan.
+    $header[] = array('data' => t('Operations'), 'colspan' => $this->operationCount());
+    return $header;
+  }
 
 }
 
