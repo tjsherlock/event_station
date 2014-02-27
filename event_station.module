@@ -17,11 +17,29 @@ function event_station_entity_info() {
     'label' => t('Event Station'),
     // Table for storing entity data, defined in hook_schema().
     'base table' => 'evreg_eventstation',//evreg = event registration, should same as name key in schema
-    // This helps Entity API know how to query your custom table.
+    // Table for storing revision data. 
+    'revision table' => 'evreg_eventstation_revision',
+    // This helps Entity API know how to query your custom table.   
     'entity keys' => array(
       'id' => 'esid',
       'label' => 'name', //7.x-2.1-dev tjs
+      'revision' => 'revision_id',
     ),
+    
+    
+    /**
+     * 
+     *     // Table for storing revision data.
+    'revision table' => 'videoentity_video_revision',
+    // This helps Entity API know how to query your custom table.
+    'entity keys' => array(
+      'id' => 'id',
+      'label' => 'name',
+      'revision' => 'revision_id',
+    ),
+     * 
+     * 
+     */
     'uri callback' => 'entity_class_uri', //7.x-2.1-dev tjs
     //These are the default controllers.
     // 'entity class' => 'Entity',
@@ -189,6 +207,13 @@ function event_station_menu() {
     'page arguments' => array(1),
     'access callback' => TRUE,
   );
+    $items['eventstation/%event_station/%'] = array(
+    'title' => 'Event Station revision',
+    'load arguments' => array(2),
+    'page callback' => 'event_station_view_revision',
+    'page arguments' => array(1),
+    'access callback' => TRUE,
+  );
   kpr($items);
   return $items;
 }
@@ -270,6 +295,20 @@ function event_station_view_entity($event_station){
     //return 'Hello Spaceman';
     
 }
+
+
+/**
+ * Callback for /event station/ID/REVISION_ID.
+ *
+ * Just display the specified revision.
+ */
+function event_station_view_revision($event_station) {
+  $output = event_station_view_entity($event_station);
+  drupal_set_title(t('@title revision @id', array('@title' => $event_station->name, '@id' => $event_station->revision_id)));
+  return $output;
+}
+
+
 
 
 /**
