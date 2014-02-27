@@ -26,20 +26,6 @@ function event_station_entity_info() {
       'revision' => 'revision_id',
     ),
     
-    
-    /**
-     * 
-     *     // Table for storing revision data.
-    'revision table' => 'videoentity_video_revision',
-    // This helps Entity API know how to query your custom table.
-    'entity keys' => array(
-      'id' => 'id',
-      'label' => 'name',
-      'revision' => 'revision_id',
-    ),
-     * 
-     * 
-     */
     'uri callback' => 'entity_class_uri', //7.x-2.1-dev tjs
     //These are the default controllers.
     // 'entity class' => 'Entity',
@@ -58,7 +44,7 @@ function event_station_entity_info() {
        'menu wildcard' => '%event_station',//must be same as entity name or maybe module name
        'file' => 'event_station.admin.inc'
      ),
-         'module' => 'event_station',
+     'module' => 'event_station',
      // Controls who can access entity CRUD.
      'access callback' => 'event_station_access',
      // Tell FieldAPI that fields can be attached to our video entity
@@ -214,7 +200,7 @@ function event_station_menu() {
     'page arguments' => array(1),
     'access callback' => TRUE,
   );
-  kpr($items);
+  //kpr($items);
   return $items;
 }
 
@@ -255,10 +241,18 @@ function event_station_permission() {
  *  @see  $items['eventstation/%event_station']
  *  @see event_station_view_entity
  */
-function event_station_load($id) {
+function event_station_load($id, $revision_id = NULL) {
+  
+  if (is_numeric($revision_id)) {
+    $es = entity_revision_load('video', $revision_id);
+    return $es;    
+  }
+  else {
     $es = entity_load('event_station', array($id));
     return array_pop($es);
+  }
 }
+
 
 
 /**
@@ -270,13 +264,13 @@ function event_station_load($id) {
  */
 function event_station_page() {
   $event_station = entity_load('event_station', array(1));
-  kpr($event_station);
+  //kpr($event_station);
 
   // Or load it with EFQ.
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'event_station');
   $results = $query->execute();
-  kpr($results);
+  //kpr($results);
   return 'hello there!';
 }
 
@@ -289,7 +283,7 @@ function event_station_page() {
 function event_station_view_entity($event_station){
     drupal_set_title($event_station->name);
     $es = entity_view('event_station', array($event_station->esid => $event_station));
-    kpr($es);
+    //kpr($es);
     //return drupal_render($es);
     return $es;
     //return 'Hello Spaceman';
@@ -307,9 +301,6 @@ function event_station_view_revision($event_station) {
   drupal_set_title(t('@title revision @id', array('@title' => $event_station->name, '@id' => $event_station->revision_id)));
   return $output;
 }
-
-
-
 
 /**
  *  Our custom entity class
@@ -419,6 +410,10 @@ class EventStationController extends EntityAPIController {
     }
 
     $entity->updated_at = REQUEST_TIME;
+    
+    
+    // Always save new revisions.
+    $entity->is_new_revision = TRUE;
 
     return parent::save($entity, $transaction);
   }

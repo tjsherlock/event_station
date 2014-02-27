@@ -9,8 +9,6 @@
  */
 function event_station_form($form, &$form_state, $EventStation, $op = 'edit') {
     
-    
-  
   $form['name'] = array(
     '#title' => t('Name'),
     '#type' => 'textfield',
@@ -36,20 +34,6 @@ function event_station_form($form, &$form_state, $EventStation, $op = 'edit') {
       '#default_value' => isset($EventStation->spots) ? $EventStation->spots : 1,
       '#weight' => -30,
   );
-
-/*
-    $form['guides'] = array(
-      '#title' => t('Guides'),
-      '#type' => 'textfield',
-      'description' => 'Name of the guiding event participants',
-      //'#default_value' => isset($EventStation->guides) ? $EventStation->guides : '',  
-      '#default_value' => '', 
-      '#weight' => -20,
-  );
- * *
- * 
- * 
- */
     
     $form['guides'] = array(
     '#title' => t('Guides'),
@@ -67,7 +51,7 @@ function event_station_form($form, &$form_state, $EventStation, $op = 'edit') {
     '#type' => 'textfield',
     '#description' => t('The user responsible for managing the station.  Initially, this is the station creator.'),
     //'#default_value' => isset($EventStation->owner) ? $EventStation->owner : array('%name' => $account->name),
-    '#default_value' => isset($EventStation->owner) ? $EventStation->owner : 'Username',
+    '#default_value' => isset($EventStation->owner) ? $EventStation->owner : event_station_accountname(),
     //'#autocomplete_path' => 'owner/autocomplete',
     '#weight' => -10,
   );
@@ -128,3 +112,25 @@ function event_station_form_submit($form, &$form_state) {
 }
 
 
+
+/**
+ * 
+ *   Utilities
+ * 
+ */
+
+
+/**
+ * 
+ * 
+ * Make sure there is a valid userid  
+ * 
+ * 
+ */
+function event_station_accountname() {
+
+    global $user;
+    
+    // The user object may not exist in all conditions, so 0 is substituted if needed.
+    return isset($user->name) ? $user->name : 0;
+}
