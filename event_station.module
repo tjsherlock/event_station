@@ -100,7 +100,7 @@ function event_station_entity_info() {
 function event_station_entity_property_info() {
   $info = array();
   $properties = &$info['event_station']['properties'];
-  $properties['id'] = array(
+  $properties['esid'] = array(
     'label' => t('Event Station ID'),
     'description' => t('The uniquie ID of the event station.'),
     'type' => 'integer',
@@ -207,7 +207,7 @@ function event_station_menu() {
 
 
 /**
- * Access callback for VideoEntity CRUD operations.
+ * Access callback for EventStation CRUD operations.
  */
 function event_station_access($op, $event_station = NULL, $account = NULL) {
   //if ((($op == 'view' && user_access('view event stations', $account))) || user_access('administer event stations', $account)) {
@@ -244,7 +244,7 @@ function event_station_permission() {
 function event_station_load($id, $revision_id = NULL) {
   
   if (is_numeric($revision_id)) {
-    $es = entity_revision_load('video', $revision_id);
+    $es = entity_revision_load('event_station', $revision_id);
     return $es;    
   }
   else {
