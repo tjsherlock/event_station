@@ -406,10 +406,10 @@ class EventStationController extends EntityAPIController {
   public function save($entity, DatabaseTransaction $transaction = NULL) {
 
     if (isset($entity->is_new)) {
-      $entity->created_at = REQUEST_TIME;
+      $entity->created = REQUEST_TIME;
     }
 
-    $entity->updated_at = REQUEST_TIME;
+    $entity->changed = REQUEST_TIME;
     
     
     // Always save new revisions.
