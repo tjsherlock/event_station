@@ -292,12 +292,6 @@ function event_station_page() {
   $query->entityCondition('entity_type', 'event_station');
   $result = $query->execute();
   
-  /*foreach($results['event_station'] as $result=> $esid ){
-    
-    kpr($esid);
-    
-  }*/
-  
       // If results were returned...
     if (!empty($result)) {
       $content = array();
@@ -315,7 +309,6 @@ function event_station_page() {
     
     
   return theme('event_station_list',$content);
-  //return 'hello there!';
 }
 
 
@@ -374,35 +367,6 @@ function event_station_preprocess_event_station_list(&$variables) {
   }
   
 }
-
- 
-
-//theme_event_station_item(&variables){
-//function theme_event_station_item($eventstation){
-/**
- * 
- * revision_id (String, 1 characters ) 3
-name (String, 13 characters ) First Station
-description (String, 25 characters ) This is the first station
-spots (String, 1 characters ) 1
-guides (String, 7 characters ) s:0:"";
-event (String, 9 characters ) PTA Event
-weight (String, 1 characters ) 3
-owner (String, 1 characters ) 0
-status (String, 1 characters ) 1
-visibility (String, 1 characters ) 1
-esid (String, 1 characters ) 3
-created (String, 10 characters ) 1394048664
-changed (String, 10 characters ) 1394048664
-default_revision (String, 1 characters ) 1
-field_category (Array, 0 elements)
-field_another_field (Array, 1 element)
- * 
- * 
- */
-
-
-
 
 /**
  *  Our custom entity class
