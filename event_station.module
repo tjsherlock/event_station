@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Provides a simple custom entity type named 'video' for tracking embed codes.
+ * Provides a custom entity type named 'event_station' representing activities in an organized event.
  */
 
 /**
@@ -180,6 +180,14 @@ function event_station_entity_property_info() {
  */
 function event_station_menu() {
   $items = array();
+  /*$items['my_entity/%my_entity'] = array(
+    'title callback'   => 'my_entity_page_title',
+    'title arguments'  => array(1),
+    'page callback'    => 'my_entity_page_view',
+    'page arguments'   => array(1),
+    'access arguments' => array('view entities'),
+    'type'             => MENU_CALLBACK,
+  );*/
   $items['event_station'] = array(
     'title' => 'Event Station Page',
     'page callback' => 'event_station_page',
@@ -204,6 +212,19 @@ function event_station_menu() {
   return $items;
 }
 
+
+/**
+ * Implements hook_theme().
+ */
+function event_station_theme() {
+  return array(
+    'event_station_list' => array(
+      'arguments' => array('title' => NULL, 'data' => NULL),
+      //'render element' => 'elements',
+      'template' => 'event-station-list',
+    ),    
+  );
+}
 
 
 /**
@@ -269,9 +290,32 @@ function event_station_page() {
   // Or load it with EFQ.
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'event_station');
-  $results = $query->execute();
-  //kpr($results);
-  return 'hello there!';
+  $result = $query->execute();
+  
+  /*foreach($results['event_station'] as $result=> $esid ){
+    
+    kpr($esid);
+    
+  }*/
+  
+      // If results were returned...
+    if (!empty($result)) {
+      $content = array();
+      // Loop over results for each type of entity returned.
+      foreach ($result as $entity_type => $data) {
+        // Load the entities of the current type.
+        $entities = entity_load($entity_type, array_keys($data));
+        
+        $content[] = entity_view('event_station', $entities);
+
+        
+      }//foreach 1
+    }
+ 
+    
+    
+  return theme('event_station_list',$content);
+  //return 'hello there!';
 }
 
 
@@ -284,9 +328,9 @@ function event_station_view_entity($event_station){
     drupal_set_title($event_station->name);
     $es = entity_view('event_station', array($event_station->esid => $event_station));
     //kpr($es);
-    //return drupal_render($es);
+
     return $es;
-    //return 'Hello Spaceman';
+
     
 }
 
@@ -301,6 +345,64 @@ function event_station_view_revision($event_station) {
   drupal_set_title(t('@title revision @id', array('@title' => $event_station->name, '@id' => $event_station->revision_id)));
   return $output;
 }
+/**
+ * 
+ * function name:  modulename_preprocess_themehook(argument)
+ * 
+ * @param array $variables
+ * 
+ */
+function event_station_preprocess_event_station_list(&$variables) {
+ // dpm($variables, 'Preprocess');
+  kpr($variables, FALSE, 'Preprocess');
+  
+  $event_stations = $variables[0]['event_station'];
+  
+  $index = 0;
+  foreach($event_stations as $event_station){
+    
+    $variables['event_stations'][$index]['name'] = $event_station['name']['#markup'];
+    $variables['event_stations'][$index]['description'] = $event_station['description']['#markup'];
+    $variables['event_stations'][$index]['esid'] = $event_station['esid']['#markup'];
+    $variables['event_stations'][$index]['event'] = $event_station['event']['#markup'];
+    $variables['event_stations'][$index]['guides'] = $event_station['guides']['#markup'];
+    $variables['event_stations'][$index]['spots'] = $event_station['spots']['#markup'];
+    //loop to collect all fields  tjs 2014Mar11
+    $variables['event_stations'][$index]['fields'] = $event_station['fields']['#markup'];
+    
+    $index++;
+  }
+  
+}
+
+ 
+
+//theme_event_station_item(&variables){
+//function theme_event_station_item($eventstation){
+/**
+ * 
+ * revision_id (String, 1 characters ) 3
+name (String, 13 characters ) First Station
+description (String, 25 characters ) This is the first station
+spots (String, 1 characters ) 1
+guides (String, 7 characters ) s:0:"";
+event (String, 9 characters ) PTA Event
+weight (String, 1 characters ) 3
+owner (String, 1 characters ) 0
+status (String, 1 characters ) 1
+visibility (String, 1 characters ) 1
+esid (String, 1 characters ) 3
+created (String, 10 characters ) 1394048664
+changed (String, 10 characters ) 1394048664
+default_revision (String, 1 characters ) 1
+field_category (Array, 0 elements)
+field_another_field (Array, 1 element)
+ * 
+ * 
+ */
+
+
+
 
 /**
  *  Our custom entity class
@@ -320,8 +422,26 @@ class EventStation extends Entity{
   protected function defaultUri() {
     return array('path' => 'eventstation/' . $this->identifier());
   }
+  
+  
+  public function toArray($d = this){
     
+    $variables = '';
+    
+		if (is_object($d)) {
+			// Gets the properties of the given object
+			// with get_object_vars function
+			$d = get_object_vars($d);
+		}
+ 
+		if (is_array($d)) {
+
+            return $d;
+		}
+  }
+  
 }
+
 
 /**
  * Our custom controller for the event_station type.
@@ -333,8 +453,43 @@ class EventStation extends Entity{
  * sites/all/modules/contrib/entity/includes/entity.controller.inc
  */
 class EventStationController extends EntityAPIController {
+  
+  
+  //relationship between buildContent and view? tjs 2014March8
     
   public function buildContent($entity, $view_mode = 'full', $langcode = NULL, $content = array()) {
+    
+  /**
+   * Following code lifted rom commerce.controller.inc
+   * 
+   * may eventually adopt and adapt
+   * 
+   *     $entity->content = $content;
+    $langcode = isset($langcode) ? $langcode : $GLOBALS['language_content']->language;
+
+    // Add in fields.
+    if (!empty($this->entityInfo['fieldable'])) {
+      $entity->content += field_attach_view($this->entityType, $entity, $view_mode, $langcode);
+    }
+
+    // Invoke hook_ENTITY_view() to allow modules to add their additions.
+    rules_invoke_all($this->entityType . '_view', $entity, $view_mode, $langcode);
+
+    // Invoke the more generic hook_entity_view() to allow the same.
+    module_invoke_all('entity_view', $entity, $this->entityType, $view_mode, $langcode);
+
+    // Remove the build array information from the entity and return it.
+    $build = $entity->content;
+    unset($entity->content);
+
+    return $build;
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   */
     
     //introduce event station properties here.
     
@@ -382,6 +537,14 @@ class EventStationController extends EntityAPIController {
       '#markup' => $entity->spots,
       );
     
+      /**if(is_array($entity->guides)){
+        
+        foreach($entity->guides as $guide){
+          
+          
+        }
+      }*/
+      
       $build['guides'] = array(
       '#type' => 'markup',
       '#markup' => $entity->guides,
@@ -391,6 +554,15 @@ class EventStationController extends EntityAPIController {
       '#type' => 'markup',
       '#markup' => $entity->event,
       );
+      
+      
+      $event_station_wrapper = entity_metadata_wrapper('event_station', $entity);
+      
+      $build['fields'] = array(
+        '#type' => 'markup',
+        '#markup' => $event_station_wrapper->field_another_field->value(),
+      );
+      
     }
     
     
