@@ -42,7 +42,7 @@ function event_station_form($form, &$form_state, $EventStation, $op = 'edit') {
     '#description' => t('Name of the guiding event participants.'),
     //'#default_value' => isset($EventStation->owner) ? $EventStation->owner : array('%name' => $account->name),
     '#autocomplete_path' => 'guides/autocomplete',
-    '#default_value' => isset($EventStation->guides) ? $EventStation->guides : array(''),
+    '#default_value' => isset($EventStation->guides) ? $EventStation->guides : '',
     //'#rows' => isset($EventStation->guides)? sizeof($EventStation->guides): 1,//set number of rows relative to existing number of guides + 1
     //'#autocomplete_path' => 'owner/autocomplete',
     '#weight' => -10,
