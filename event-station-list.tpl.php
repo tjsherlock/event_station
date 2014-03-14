@@ -28,45 +28,55 @@
   <div class='event-station-label'></div> 
     <div class='event-station-name'> 
       <div class='event-station-name-label'></div> 
-      <p>
-      <strong><?php print $event_station['name']; ?></strong>
-      </p>  
+        <div class='event-station-name-value'>      
+          <p>
+          <strong><?php print $event_station['name']; ?></strong>
+          </p>
+        </div>
     </div>
     <div class='event-station-description'> 
-      <div class='event-station-description-label'></div>  
+      <div class='event-station-description-label'></div>
+      <div class='event-station-description-value'>
         <p>
         <?php print $event_station['description']; ?>
-        </p> 
+        </p>
+      </div>
     </div>
     <div class='event-station-id'> 
       <div class='event-station-id-label'></div>
-
+      <div class='event-station-id-value'>      
         <p>
         <?php print $event_station['esid']; ?>
         </p>
+      </div>  
     </div>        
     <div class='event-station-event'> 
       <div class='event-station-event-label'></div>
-        <p>
-          <?php print $event_station['event']; ?>
-        </p>
+            <div class='event-station-event-value'>
+              <p>
+                <?php print $event_station['event']; ?>
+              </p>
+           </div>
     </div>        
     <div class='event-station-guides'> 
       <div class='event-station-guides-label'></div>
-      
+      <div class='event-station-guides-value'>    
       <?php if ($event_station['guides']): ?>
          <?php foreach ($event_station['guides'] as $guide): ?>
-        <p>
+             <p>
             <?php print $guide; ?>
-        </p>
-        <?php endforeach;//$event_station['guides'] ?>
+            </p>
+          <?php endforeach;//$event_station['guides'] ?>
       <?php endif;//$event_station['guides'] ?>
+      </div> 
     </div>
     <div class='event-station-spots'> 
       <div class='event-station-spots-label'></div>
-      <p>      
-        <?php print $event_station['spots']; ?>
-      </p>
+        <div class='event-station-spots-value'>
+          <p>      
+            <?php print $event_station['spots']; ?>
+          </p>
+      </div>
     </div>       
 </div> <?php //event-station ?>      
     <?php endforeach;////$event_station ?>
