@@ -20,9 +20,10 @@ function event_station_form($form, &$form_state, $EventStation, $op = 'edit') {
 
   $form['description'] = array(
     '#title' => t('Description'),
-    '#type' => 'textfield',
+    '#type' => 'textarea',
     '#description' => t('Description of the event station.'),
     '#default_value' => isset($EventStation->description) ? $EventStation->description : '',
+    '#rows' => 3,
     '#required' => TRUE,
     '#weight' => -40,
   );
@@ -40,7 +41,9 @@ function event_station_form($form, &$form_state, $EventStation, $op = 'edit') {
     '#type' => 'textfield',
     '#description' => t('Name of the guiding event participants.'),
     //'#default_value' => isset($EventStation->owner) ? $EventStation->owner : array('%name' => $account->name),
+    '#autocomplete_path' => 'guides/autocomplete',
     '#default_value' => isset($EventStation->guides) ? $EventStation->guides : array(''),
+    //'#rows' => isset($EventStation->guides)? sizeof($EventStation->guides): 1,//set number of rows relative to existing number of guides + 1
     //'#autocomplete_path' => 'owner/autocomplete',
     '#weight' => -10,
   );
@@ -118,6 +121,14 @@ function event_station_form_submit($form, &$form_state) {
  *   Utilities
  * 
  */
+
+function guides_autocomplete($string = ''){
+  
+  	$guides = array();
+	$guides = get_guides($string);
+	drupal_json($guides);
+  
+}
 
 
 /**
