@@ -550,11 +550,11 @@ class EventStationController extends EntityAPIController {
         }
       }*/
       
-      $guides_array = unserialize($entity->guides);
+      //$guides_array = unserialize($entity->guides);
       
       $build['guides'] = array(
       '#type' => 'markup',
-      '#markup' => $guides_array,
+      '#markup' => $entity->guides,
       );
     
       $build['event'] = array(
