@@ -116,8 +116,8 @@ function event_station_schema() {
         'description' => 'Name of the guiding event participants',
         'type' => 'text',
         'not null' => TRUE,
-        'serialize' => TRUE,
-        'serialized default' => 'a:0:{}',
+        //'serialize' => TRUE,
+        //'serialized default' => 'a:0:{}',
       ),
       // this is the registration event
       // May be a 'foreign key' on the table.
@@ -169,20 +169,29 @@ function event_station_schema() {
 
 
 /**
- *  Adding the description field to the evreg_event_station table
+ *  Modifying the guides field type from serialized array to text.
  * 
- *  Use this to add indices, maybe 2014Feb20 tjs
+ *  2014March14 tjs
  */
-/*
-function event_station_update_7000(&$sandbox) {
-  $new_field = array(
-    'description' => 'A description of the event station',
-    'type' => 'varchar',
-    'length' => '255',
-    'not null' => TRUE,
-  );
 
-  db_add_field('evreg_eventstation', 'description', $new_field);
+function event_station_update_7000(&$sandbox) {
+  
+      $spec = array(
+        'description' => 'Name of the guiding event participants',
+        'type' => 'text',
+        'not null' => TRUE,
+      );
+
+  db_change_field('evreg_eventstation_revision', 'guides', 'guides', $spec);
 }
- * *
+
+
+/**
+ * 
+ * db_change_field($table, $field, $field_new, $spec, $keys_new = array())
+ * 
+ * 
+ * 
+ * 
+ * 
  */
