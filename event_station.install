@@ -140,9 +140,9 @@ function event_station_schema() {
       //uid
       'owner' => array(
         'description' => 'The user responsible for managing the station.  Initially, this is the station creator',
-        'type' => 'int',
+        'type' => 'text',
         'not null' => TRUE,
-        'default' => 0,
+        'default' => '',
       ),
       
       'status' => array(
