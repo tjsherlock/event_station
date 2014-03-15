@@ -377,6 +377,7 @@ function event_station_preprocess_event_station_list(&$variables) {
     $variables['event_stations'][$index]['esid'] = $event_station['esid']['#markup'];
     $variables['event_stations'][$index]['event'] = $event_station['event']['#markup'];
     $variables['event_stations'][$index]['guides'] = $event_station['guides']['#markup'];
+    $variables['event_stations'][$index]['owner'] = $event_station['owner']['#markup'];
     $variables['event_stations'][$index]['spots'] = $event_station['spots']['#markup'];
     //loop to collect all fields  tjs 2014Mar11
     $variables['event_stations'][$index]['fields'] = $event_station['fields']['#markup'];
@@ -555,6 +556,11 @@ class EventStationController extends EntityAPIController {
       $build['guides'] = array(
       '#type' => 'markup',
       '#markup' => $entity->guides,
+      );
+      
+      $build['owner'] = array(
+        '#type' => 'markup',
+        '#markup' => $entity->owner,
       );
     
       $build['event'] = array(
