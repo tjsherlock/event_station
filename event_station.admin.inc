@@ -111,7 +111,7 @@ function event_station_form_submit($form, &$form_state) {
   $EventStation = entity_ui_form_submit_build_entity($form, $form_state);
   $EventStation->save();
   drupal_set_message(t('@name event station has been saved.', array('@name' => $EventStation->name)));
-  $form_state['redirect'] = 'admin/event_station';
+  $form_state['redirect'] = 'admin/eventstation';// where is should this be placed?  is the right value/path?  tjs 2014March14
 }
 
 
