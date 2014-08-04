@@ -18,8 +18,27 @@
 
 interface EventStationControllerInterface
   extends DrupalEntityControllerInterface {
-  public function create();
+  
+   /**
+   * Create a new entity.
+   *
+   * @param array $values
+   *   An array of values to set, keyed by property name.
+   * @return
+   *   A new instance of the entity type.
+   */
+  public function create(array $values = array());
+  
   public function save($entity);
+  
+  /**
+   * Delete permanently saved entities.
+   *
+   * In case of failures, an exception is thrown.
+   *
+   * @param $entity
+   *   An array of entity IDs.
+   */
   public function delete($entity);
 }
 
@@ -31,7 +50,9 @@ implements EventStationControllerInterface {
   
     
     
-    public function create() {
+    public function create(array $values = array()) {
+      
+        $values = super($values);
         $entity = new stdClass();
         $entity->type = 'event_station';
         $entity->esid = 0;
@@ -48,6 +69,8 @@ implements EventStationControllerInterface {
         $entity->visibility = TRUE;
         $entity->created = NULL;
         $entity->changed = NULL;
+        
+        
         return $entity;
     }
     

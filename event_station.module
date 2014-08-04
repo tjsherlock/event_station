@@ -274,11 +274,19 @@ function event_station_permission() {
 }
 
 /**
+ * Implementation of hook_init().
+ */
+function event_station_init() {
+  drupal_add_css(drupal_get_path('module', 'event_station') . '/css/event_station.css', array('group' => CSS_DEFAULT));
+  }
+/**
  *  Menu autoloader for /event_station
  *  7.x-2.1-dev tjs
  * 
  *  @see  $items['eventstation/%event_station']
  *  @see event_station_view_entity
+ * 
+ * How to load revisions?
  */
 function event_station_load($id, $revision_id = NULL) {
   
@@ -373,6 +381,8 @@ function event_station_preprocess_event_station_list(&$variables) {
   foreach($event_stations as $event_station){
     
     $variables['event_stations'][$index]['name'] = $event_station['name']['#markup'];
+    $variables['event_stations'][$index]['created'] = $event_station['created']['#markup'];
+    $variables['event_stations'][$index]['changed'] = $event_station['changed']['#markup'];    
     $variables['event_stations'][$index]['description'] = $event_station['description']['#markup'];
     $variables['event_stations'][$index]['esid'] = $event_station['esid']['#markup'];
     $variables['event_stations'][$index]['event'] = $event_station['event']['#markup'];
@@ -516,6 +526,19 @@ class EventStationController extends EntityAPIController {
       '#markup' => $entity->name,
       );
       
+      /*
+      $build['created'] = array(
+        '#type' => 'markup',
+        '#markup' => $entity->created,
+      );
+      
+      $build['changed'] = array(
+        '#type' => 'markup',
+        '#markup' => $entity->changed,
+      ); 
+       * 
+       */     
+      
       $build['description'] = array( 
       '#type' => 'markup',
       '#markup' => $entity->description,
@@ -532,6 +555,16 @@ class EventStationController extends EntityAPIController {
       '#type' => 'markup',
       '#markup' => $entity->esid,
       );
+      
+      $build['created'] = array(
+        '#type' => 'markup',
+        '#markup' => format_date($entity->created),
+      );
+      
+      $build['changed'] = array(
+        '#type' => 'markup',
+        '#markup' => format_date($entity->changed),
+      );      
     
       $build['description'] = array( 
       '#type' => 'markup',
